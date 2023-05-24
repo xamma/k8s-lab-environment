@@ -50,3 +50,9 @@ Then simply execute the playbook:
 cd config
 ansible-playbook playbooks/setup-k8s-cluster.yml
 ```
+
+## CI/CD
+**Needs remote-state**  
+The CI/CD Workflow will automatically update your infrastructure and run the defined playbook against it on Push to master.  
+It will also comment your pull request with the output from the Terraform plan command to see possible changes.  
+***Make sure the configure the needed secrets in GitHub***.
