@@ -1,5 +1,7 @@
 .vscode
 
+**/inventory.ini
+
 # remote state
 **/remote-state/config.tf
 **/remote-state/.terraform/
