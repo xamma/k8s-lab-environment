@@ -1,0 +1,23 @@
+- name: Install cri on K8s hosts
+  hosts: all
+  become: true
+  roles:
+    - role: setup-cri
+
+- name: Install k8s and tools on K8s hosts
+  hosts: all
+  become: true
+  roles:
+    - role: setup-kubernetes
+
+- name: Initialize master node
+  hosts: k8smaster
+  become: true
+  roles:
+    - role: initialize-nodes
+
+- name: Join worker nodes
+  hosts: k8snode
+  become: true
+  roles:
+    - role: join-workers

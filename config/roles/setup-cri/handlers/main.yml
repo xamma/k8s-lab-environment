@@ -1,0 +1,6 @@
+---
+# handlers file for setup-cri
+- name: Restart containerd
+  ansible.builtin.service:
+    name: containerd
+    state: restarted

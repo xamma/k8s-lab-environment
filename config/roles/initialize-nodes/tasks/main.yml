@@ -1,0 +1,30 @@
+---
+# tasks file for initialize-nodes
+- name: Check if Kubernetes cluster already initialized
+  stat:
+    path: /etc/kubernetes/admin.conf
+  register: kube_config_file
+
+- name: Initialize control node
+  command: kubeadm init
+  register: kubeadm_output
+  when: kube_config_file.stat.exists == false
+
+- name: Create .kube directory
+  file:
+    path: /home/ubuntu/.kube
+    state: directory
+    mode: 0755
+
+- name: Copy Kubernetes config to user's directory
+  copy:
+    src: /etc/kubernetes/admin.conf
+    dest: /home/ubuntu/.kube/config
+    remote_src: yes
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: 0644
+
+- name: Apply Calico
+  become: false
+  command: kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/master/manifests/calico.yaml

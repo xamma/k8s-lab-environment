@@ -1,0 +1,12 @@
+.vscode
+
+# remote state
+**/remote-state/config.tf
+**/remote-state/.terraform/
+**/remote-state/.terraform.lock.hcl
+**/remote-state/*.backup
+**/remote-state/*.tfstate
+
+# tf project
+**/.terraform.lock.hcl
+**/.terraform/

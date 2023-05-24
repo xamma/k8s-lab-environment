@@ -1,0 +1,50 @@
+---
+# tasks file for setup-kubernetes
+- name: Set up kernel modules
+  copy:
+    dest: /etc/modules-load.d/k8s.conf
+    content: |
+      br_netfilter
+
+- name: Set up sysctl parameters
+  copy:
+    dest: /etc/sysctl.d/k8s.conf
+    content: |
+      net.bridge.bridge-nf-call-ip6tables = 1
+      net.bridge.bridge-nf-call-iptables = 1
+
+- name: Apply sysctl parameters without reboot
+  command: sysctl --system
+
+- name: Install Kubernetes dependencies
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  with_items:
+    - apt-transport-https
+    - curl
+
+- name: Add Kubernetes repository GPG key
+  shell: curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+
+- name: Add Kubernetes repository
+  copy:
+    dest: /etc/apt/sources.list.d/kubernetes.list
+    content: deb https://apt.kubernetes.io/ kubernetes-xenial main
+
+- name: Update apt cache
+  apt:
+    update_cache: yes
+
+- name: Install Kubernetes components
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - kubelet
+    - kubeadm
+    - kubectl
+
+- name: Hold Kubernetes packages
+  command: apt-mark hold kubelet kubeadm kubectl

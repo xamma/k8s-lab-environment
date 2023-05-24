@@ -1,0 +1,10 @@
+---
+# tasks file for join-workers
+- name: Retrieve join command from master node
+  command: kubeadm token create --print-join-command
+  register: join_command
+  delegate_to: "{{ groups['k8smaster'][0] }}"
+
+- name: Join worker node to the cluster
+  command: "{{ join_command.stdout }}"
+  ignore_errors: true
