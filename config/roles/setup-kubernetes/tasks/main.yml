@@ -25,13 +25,19 @@
     - apt-transport-https
     - curl
 
-- name: Add Kubernetes repository GPG key
-  shell: curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+- name: Download public signing key for Kubernetes package repositories
+  shell: curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.28/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+  args:
+    creates: /etc/apt/keyrings/kubernetes-apt-keyring.gpg
 
-- name: Add Kubernetes repository
-  copy:
-    dest: /etc/apt/sources.list.d/kubernetes.list
-    content: deb https://apt.kubernetes.io/ kubernetes-xenial main
+- name: Create /etc/apt/keyrings directory if it doesn't exist (for older releases)
+  file:
+    path: /etc/apt/keyrings
+    state: directory
+  when: ansible_distribution == "Debian" and ansible_distribution_major_version|int < 12 or ansible_distribution == "Ubuntu" and ansible_distribution_major_version|int < 22
+
+- name: Replace Kubernetes repository definition
+  shell: echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.28/deb/ /" | sudo tee /etc/apt/sources.list.d/kubernetes.list
 
 - name: Update apt cache
   apt:
