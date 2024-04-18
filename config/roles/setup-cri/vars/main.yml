@@ -1,2 +1,3 @@
 ---
 # vars file for setup-cri
+containerd_version: "1.7.15"

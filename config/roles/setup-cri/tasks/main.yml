@@ -32,8 +32,8 @@
 
   - name: Download and extract containerd binary
     shell: |
-      wget https://github.com/containerd/containerd/releases/download/v1.7.15/containerd-1.7.15-linux-amd64.tar.gz 
-      tar xvf containerd-1.6.15-linux-amd64.tar.gz
+      wget https://github.com/containerd/containerd/releases/download/v{{ containerd_version }}/containerd-{{ containerd_version }}-linux-amd64.tar.gz 
+      tar xvf containerd-{{ containerd_version }}-linux-amd64.tar.gz
       mv bin/* /usr/bin/
     notify: Restart containerd
 
