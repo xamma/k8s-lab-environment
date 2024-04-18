@@ -2,6 +2,8 @@
 I always searched for an easy way to setup a vanilla K8s cluster on VM's.  
 Since I didn't find anything comparable (without 10000 vars and stuff) i made this.  
 
+**Tested with k8s version 1.28**  
+
 **Tested on Ubuntu 22.04**
 
 ![controlplane](assets/sshmaster.png)
